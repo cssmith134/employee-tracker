@@ -1,3 +1,3 @@
 DROP DATABASE IF EXISTS employees;
-CREATE DATABASE emeployees;
+CREATE DATABASE employees;
 USE employees;
