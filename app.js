@@ -1,4 +1,5 @@
 const inquirer = require('inquirer');
+const db = require('./db/connection')
 
 
 
@@ -61,6 +62,27 @@ const promptUser = () => {
     })
 
 };
+
+const viewAllEmployees = () => {
+    let sql = `SELECT employee.id,
+                employee.first_name,
+                employee.last_name,
+                role.title,
+                department.department_name AS 'department,
+                role.salary
+                FROM employee, role, department
+                WHERE department.id = role.department_id
+                AND role.id = employee.role_id
+                ORDER BY employee.id ASC'
+                `;
+
+               db.query(sql, (err , res) => {
+                   if (err) throw err;
+                   console.table(res)
+               })
+};
+
+
 
 promptUser()
 
