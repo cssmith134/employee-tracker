@@ -63,24 +63,84 @@ const promptUser = () => {
 
 };
 
+const viewAllDepartments = () => {
+    let sql = `SELECT * FROM department`;
+
+    db.query(sql, (err , res) => {
+        if (err) throw err;
+        console.table(res)
+    })
+
+    promptUser();
+};
+
+const viewAllRoles = () => {
+    let sql = `SELECT * FROM roles`;
+
+    db.query(sql, (err , res) => {
+        if (err) throw err;
+        console.table(res)
+    })
+
+    promptUser();
+};
+
+
+
 const viewAllEmployees = () => {
-    let sql = `SELECT employee.id,
-                employee.first_name,
-                employee.last_name,
-                role.title,
-                department.department_name AS 'department,
-                role.salary
-                FROM employee, role, department
-                WHERE department.id = role.department_id
-                AND role.id = employee.role_id
-                ORDER BY employee.id ASC'
-                `;
+    let sql = `SELECT * FROM employee`;
 
                db.query(sql, (err , res) => {
                    if (err) throw err;
                    console.table(res)
                })
+
+    promptUser();
 };
+
+const addDepartment = () => {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'deptName',
+            message: 'What is the name of the department ?'
+        }
+       
+    ]).then (choices => {
+        let sql = `INSERT INTO department (department_name) VALUES (?)`;
+      
+
+        db.query(sql, choices.deptName, (err, res) => {
+            if (err) throw err;
+            console.log(`Added`, choices.deptName, ' to databse')
+        });
+        promptUser();
+    })
+   
+};
+
+const addRole = () => {
+    inquirer.prompt ([
+        {
+            type: 'input',
+            name: 'role',
+            message: 'What is the new role ?'
+        },
+        {
+            type: 'input',
+            name: 'salary',
+            message: 'What is the salary for this role?'
+        }
+    ]).then (newRole => {
+        let sql = `INSERT INTO roles (roles_title, roles_salary) VALUES (?,?)`;
+        const roles = [newRole.role, newRole.salary]
+        db.query(sql, roles.role, (err, res) => {
+            if (err) throw err;
+            console.log(`Added`, newRole.role, `to database`)
+        })
+        promptUser();
+    })
+}
 
 
 
