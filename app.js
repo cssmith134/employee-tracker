@@ -54,9 +54,10 @@ const promptUser = () => {
             updateRole()
         }
 
-       // if (choices.choices == 'Exit') {
+       if (choices.choices == 'Exit') {
+           console.log("All complete! press control + C to exit.")
 
-        //}
+        }
 
 
     })
@@ -130,13 +131,46 @@ const addRole = () => {
             type: 'input',
             name: 'salary',
             message: 'What is the salary for this role?'
+        },
+        {
+            type: 'input',
+            name: 'deptId',
+            message: 'Which department does this role belong to?'
         }
     ]).then (newRole => {
-        let sql = `INSERT INTO roles (roles_title, roles_salary) VALUES (?,?)`;
-        const roles = [newRole.role, newRole.salary]
-        db.query(sql, roles.role, (err, res) => {
+        let sql = `INSERT INTO roles (title, salary, department_id) VALUES (?,?,?)`;
+        
+        db.query(sql, [newRole.role, newRole.salary, newRole.deptId], (err, res) => {
             if (err) throw err;
             console.log(`Added`, newRole.role, `to database`)
+        })
+        promptUser();
+    })
+};
+
+const addEmployee = () => {
+    inquirer.prompt ([
+        {
+            type: 'input',
+            name: 'firstName',
+            message: 'What is the employees first name?'
+        },
+        {
+            type: 'input',
+            name: 'lastName',
+            message: 'What is the employees last name?'
+        },
+        {
+            type: 'input',
+            name: 'empRole',
+            message: 'What is this employees role?'
+        }
+    ]).then (newEmp => {
+        let sql = `INSERT INTO employee (first_name, last_name, role_id) VALUES (?,?,?)`;
+
+        db.query(sql, [newEmp.firstName, newEmp.lastName, newEmp.empRole], (err, res) => {
+            if (err) throw err;
+            console.log(`Added`, newEmp.firstName, newEmp.lastName, `to the database`)
         })
         promptUser();
     })
